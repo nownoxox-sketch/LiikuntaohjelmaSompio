@@ -1,7 +1,3 @@
-
-    }
-  });
-</script>
 <!DOCTYPE html>
 <html lang="fi">
 <head>
@@ -10,49 +6,87 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: #0047AB;
+      background: #f2f2f2;
       padding: 20px;
     }
     h1 {
       text-align: center;
     }
     .card {
-      max-width: 600px;
+      max-width: 700px;
       margin: 20px auto;
       background: #fff;
       padding: 20px;
       border-radius: 10px;
       box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
-<script>
-  // Funktio, joka näyttää koko ohjelman taulukossa
-  document.getElementById("show-all-btn").addEventListener("click", function() {
-    const allScheduleDiv = document.getElementById("all-schedule");
-    const tbodyAll = document.getElementById("all-schedule-body");
-
-    if (allScheduleDiv.style.display === "none") {
-      // Täytetään taulukko, jos se on tyhjä
-      if (tbodyAll.innerHTML.trim() === "") {
-        let rows = "";
-        for (const [viikko, tiedot] of Object.entries(ohjelma)) {
-          rows += `
-            <tr>
-              <td>${viikko}</td>
-              <td>${tiedot.paikka}</td>
-              <td>${tiedot.kakso}</td>
-              <td>${tiedot.yksö}</td>
-            </tr>
-          `;
-        }
-        tbodyAll.innerHTML = rows;
-      }
-      allScheduleDiv.style.display = "block";
-      this.innerText = "Piilota kaikki ohjelmat";
-    } else {
-      allScheduleDiv.style.display = "none";
-      this.innerText = "Näytä kaikki ohjelmat";
     }
-  });
-</script>
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: center;
+    }
+    th {
+      background: #e0e0e0;
+    }
+    #allWeeks {
+      display: none;
+      margin-top: 20px;
+    }
+    button {
+      display: block;
+      margin: 20px auto;
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      background: #007BFF;
+      color: white;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <h1>Liikuntaohjelma</h1>
+  <div class="card">
+    <h2 id="week-title"></h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Paikka</th>
+          <th>Kaksoistunti</th>
+          <th>Yksöistunti</th>
+        </tr>
+      </thead>
+      <tbody id="schedule"></tbody>
+    </table>
+
+    <!-- Nappi koko listan avaamiseen -->
+    <button onclick="toggleList()">⬇ Näytä kaikki viikot</button>
+
+    <!-- Koko lista -->
+    <div id="allWeeks">
+      <h3>Koko lukuvuoden ohjelma</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Viikko</th>
+            <th>Paikka</th>
+            <th>Kaksoistunti</th>
+            <th>Yksöistunti</th>
+          </tr>
+        </thead>
+        <tbody id="allSchedule"></tbody>
+      </table>
+    </div>
+  </div>
 
   <script>
     // Liikuntaohjelma viikkokohtaisesti
@@ -66,15 +100,15 @@
       39: { paikka:"Ilmoitetaan myöhemmin", kakso:"Suunnistus", yksö:"Suunnistuksen teoria" },
       40: { paikka:"Ilmoitetaan myöhemmin", kakso:"Suunnistus", yksö:"Kaupunkisuunnistus" },
       41: { paikka:"Koulun lähimaastot", kakso:"Toiveulkoilikka", yksö:"Toiveulkoilikka" },
-      42: { "<h1>Syysloma</h1>"
+      42: { paikka:"-", kakso:"SYYSloma", yksö:"-" },
       43: { paikka:"Uimahalli", kakso:"Vesiliikunta", yksö:"Kuntosali" },
       44: { paikka:"Uimahalli", kakso:"Vesiliikunta", yksö:"Kuntosali" },
-      45: { paikka:"Palloiluhalli", kakso:"Salibandy", yksö:"Salibandy" },
-      46: { paikka:"Juhlasali", kakso:"Telinevoimistelu", yksö:"Polttopelit" },
-      47: { paikka:"Juhlasali", kakso:"Yhteistanssit", yksö:"Yhteistanssit" },
-      48: { paikka:"Palloiluhalli", kakso:"Yhteistanssit", yksö:"Yhteistanssit" },
-      49: { paikka:"Juhlasali/Kuntosali", kakso:"Kuntoliikunta", yksö:"Toive sisäliikunta" },
-      50: { paikka:"Palloiluhalli", kakso:"Koripallo", yksö:"Koripallo" },
+      45: { paikka:"PH", kakso:"Salibandy", yksö:"Salibandy" },
+      46: { paikka:"JS", kakso:"Telinevoimistelu", yksö:"Polttopelit" },
+      47: { paikka:"JS", kakso:"Yhteistanssit", yksö:"Yhteistanssit" },
+      48: { paikka:"PH", kakso:"Yhteistanssit", yksö:"Yhteistanssit" },
+      49: { paikka:"JS/KS", kakso:"Kuntoliikunta", yksö:"Toive sisäliikunta" },
+      50: { paikka:"PH", kakso:"Koripallo", yksö:"Koripallo" },
       51: { paikka:"Koulun salit", kakso:"Sisäliikunta", yksö:"Sisäliikunta" }
     };
 
@@ -105,29 +139,29 @@
     } else {
       tbody.innerHTML = `<tr><td colspan="3">Ei ohjelmaa tälle viikolle</td></tr>`;
     }
+
+    // Täytetään koko lista
+    let allTbody = document.getElementById("allSchedule");
+    for (let v in ohjelma) {
+      allTbody.innerHTML += `
+        <tr>
+          <td>${v}</td>
+          <td>${ohjelma[v].paikka}</td>
+          <td>${ohjelma[v].kakso}</td>
+          <td>${ohjelma[v].yksö}</td>
+        </tr>
+      `;
+    }
+
+    // Näytä/Piilota lista
+    function toggleList() {
+      let div = document.getElementById("allWeeks");
+      if (div.style.display === "none") {
+        div.style.display = "block";
+      } else {
+        div.style.display = "none";
+      }
+    }
   </script>
 </body>
 </html>
-      33: { paikka:"Koulun lähimaastot", kakso:"Kuulumiset + pihapelit, Tapaaminen pukkar.", yksö:"Pelisäännöt, leikit" },
-      34: { paikka:"Koulun lähimaastot", kakso:"Ulkoliikunta, Tapaaminen pukkar.", yksö:"Ulkoliikunta" },
-      35: { paikka:"Kalevan YU-kenttä", kakso:"Perusliikunta", yksö:"MOVE-testi" },
-      36: { paikka:"Kalevan YU-kenttä", kakso:"Perusliikunta", yksö:"Loikkatreeni" },
-      37: { paikka:"Kalevan tekonurmi", kakso:"Jalkapallo", yksö:"Lipuryöstö" },
-      38: { paikka:"Kalevan tekonurmi", kakso:"Jalkapallo & ultimate", yksö:"Lenkki" },
-      39: { paikka:"Ilmoitetaan myöhemmin", kakso:"Suunnistus", yksö:"Suunnistuksen teoria" },
-      40: { paikka:"Ilmoitetaan myöhemmin", kakso:"Suunnistus", yksö:"Kaupunkisuunnistus" },
-      41: { paikka:"Koulun lähimaastot", kakso:"Toiveulkoilikka", yksö:"Toiveulkoilikka" },
-      42: { "<h1>Syysloma</h1>"
-      43: { paikka:"Uimahalli", kakso:"Vesiliikunta", yksö:"Kuntosali" },
-      44: { paikka:"Uimahalli", kakso:"Vesiliikunta", yksö:"Kuntosali" },
-      45: { paikka:"Palloiluhalli", kakso:"Salibandy", yksö:"Salibandy" },
-      46: { paikka:"Juhlasali", kakso:"Telinevoimistelu", yksö:"Polttopelit" },
-      47: { paikka:"Juhlasali", kakso:"Yhteistanssit", yksö:"Yhteistanssit" },
-      48: { paikka:"Palloiluhalli", kakso:"Yhteistanssit", yksö:"Yhteistanssit" },
-      49: { paikka:"Juhlasali/Kuntosali", kakso:"Kuntoliikunta", yksö:"Toive sisäliikunta" },
-      50: { paikka:"Palloiluhalli", kakso:"Koripallo", yksö:"Koripallo" },
-      51: { paikka:"Koulun salit", kakso:"Sisäliikunta", yksö:"Sisäliikunta" }
-
-
-
-
