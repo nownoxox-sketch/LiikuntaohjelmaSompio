@@ -23,56 +23,6 @@
       padding: 20px;
       border-radius: 10px;
       box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
-    }
-    th, td {
-      border: 1px solid #ccc;
-      padding: 8px;
-      text-align: center;
-    }
-    th {
-      background: #e0e0e0;
-    }
-  </style>
-</head>
-<body>
-  <h1>Liikuntaohjelma</h1>
-  <div class="card">
-    <h2 id="week-title"></h2>
-    <table>
-      <thead>
-        <tr>
-          <th>Paikka</th>
-          <th>Kaksoistunti</th>
-          <th>Yksöistunti (Oppitunnit aina koululla)</th>
-        </tr>
-      </thead>
-      <tbody id="schedule"></tbody>
-    </table>
-  </div>
-  <!-- Lisää napin heti taulukon jälkeen -->
-<button id="show-all-btn" style="display:block; margin:20px auto;">Näytä kaikki ohjelmat</button>
-
-<!-- Lisää alue, johon tulostetaan koko ohjelma -->
-<div id="all-schedule" style="max-width: 600px; margin: 0 auto; background:#fff; padding: 20px; border-radius: 10px; box-shadow: 0px 4px 10px rgba(0,0,0,0.1); display:none;">
-  <h2>Kaikki ohjelmat</h2>
-  <table>
-    <thead>
-      <tr>
-        <th>Viikko</th>
-        <th>Paikka</th>
-        <th>Kaksoistunti</th>
-        <th>Yksöistunti</th>
-      </tr>
-    </thead>
-    <tbody id="all-schedule-body"></tbody>
-  </table>
-</div>
-
 <script>
   // Funktio, joka näyttää koko ohjelman taulukossa
   document.getElementById("show-all-btn").addEventListener("click", function() {
@@ -158,6 +108,26 @@
   </script>
 </body>
 </html>
+      33: { paikka:"Koulun lähimaastot", kakso:"Kuulumiset + pihapelit, Tapaaminen pukkar.", yksö:"Pelisäännöt, leikit" },
+      34: { paikka:"Koulun lähimaastot", kakso:"Ulkoliikunta, Tapaaminen pukkar.", yksö:"Ulkoliikunta" },
+      35: { paikka:"Kalevan YU-kenttä", kakso:"Perusliikunta", yksö:"MOVE-testi" },
+      36: { paikka:"Kalevan YU-kenttä", kakso:"Perusliikunta", yksö:"Loikkatreeni" },
+      37: { paikka:"Kalevan tekonurmi", kakso:"Jalkapallo", yksö:"Lipuryöstö" },
+      38: { paikka:"Kalevan tekonurmi", kakso:"Jalkapallo & ultimate", yksö:"Lenkki" },
+      39: { paikka:"Ilmoitetaan myöhemmin", kakso:"Suunnistus", yksö:"Suunnistuksen teoria" },
+      40: { paikka:"Ilmoitetaan myöhemmin", kakso:"Suunnistus", yksö:"Kaupunkisuunnistus" },
+      41: { paikka:"Koulun lähimaastot", kakso:"Toiveulkoilikka", yksö:"Toiveulkoilikka" },
+      42: { "<h1>Syysloma</h1>"
+      43: { paikka:"Uimahalli", kakso:"Vesiliikunta", yksö:"Kuntosali" },
+      44: { paikka:"Uimahalli", kakso:"Vesiliikunta", yksö:"Kuntosali" },
+      45: { paikka:"Palloiluhalli", kakso:"Salibandy", yksö:"Salibandy" },
+      46: { paikka:"Juhlasali", kakso:"Telinevoimistelu", yksö:"Polttopelit" },
+      47: { paikka:"Juhlasali", kakso:"Yhteistanssit", yksö:"Yhteistanssit" },
+      48: { paikka:"Palloiluhalli", kakso:"Yhteistanssit", yksö:"Yhteistanssit" },
+      49: { paikka:"Juhlasali/Kuntosali", kakso:"Kuntoliikunta", yksö:"Toive sisäliikunta" },
+      50: { paikka:"Palloiluhalli", kakso:"Koripallo", yksö:"Koripallo" },
+      51: { paikka:"Koulun salit", kakso:"Sisäliikunta", yksö:"Sisäliikunta" }
+
 
 
 
