@@ -136,6 +136,9 @@
     let div = document.getElementById("allWeeks");
     div.style.display = (div.style.display === "none") ? "block" : "none";
   }
+</script>
+
+
     function getWeekNumber(d) {
       d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
       let dayNum = d.getUTCDay() || 7;
@@ -186,10 +189,3 @@
   </script>
 </body>
 </html>
-
-
-
-
-
-
-
