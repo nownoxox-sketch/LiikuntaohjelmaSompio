@@ -2,20 +2,24 @@
 <html lang="fi">
 <head>
   <meta charset="UTF-8">
-  <h1 style="color:white;">Liikuntaohjelma LLE</h1>
+  <title>Liikuntaohjelma LLE</title>
+
   <style>
     body {
       font-family: Archivo Black, sans-serif;
       background: #000047;
       padding: 20px;
+      color: white;
     }
     h1 {
       text-align: center;
+      color: white;
     }
     .card {
       max-width: 700px;
       margin: 20px auto;
       background: #fff;
+      color: black;
       padding: 20px;
       border-radius: 10px;
       box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
@@ -53,9 +57,14 @@
     }
   </style>
 </head>
+
 <body>
+
+  <h1>Liikuntaohjelma LLE</h1>
+
   <div class="card">
     <h2 id="week-title"></h2>
+
     <table>
       <thead>
         <tr>
@@ -77,7 +86,7 @@
             <th>Viikko</th>
             <th>Paikka</th>
             <th>Kaksoistunti</th>
-            <th>Yksöistunti (kaikki tunnit koululla)</th>
+            <th>Yksöistunti</th>
           </tr>
         </thead>
         <tbody id="allSchedule"></tbody>
@@ -85,107 +94,58 @@
     </div>
   </div>
 
-<script>
-  async function loadData() {
-    const response = await fetch("ohjelma.json");
-    const ohjelma = await response.json();
+  <script>
+    async function loadData() {
+      const response = await fetch("ohjelma.json");
+      const ohjelma = await response.json();
 
-    function getWeekNumber(d) {
-      d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
-      let dayNum = d.getUTCDay() || 7;
-      d.setUTCDate(d.getUTCDate() + 4 - dayNum);
-      let yearStart = new Date(Date.UTC(d.getUTCFullYear(),0,1));
-      return Math.ceil((((d - yearStart) / 86400000) + 1)/7);
+      function getWeekNumber(d) {
+        d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+        let dayNum = d.getUTCDay() || 7;
+        d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+        let yearStart = new Date(Date.UTC(d.getUTCFullYear(),0,1));
+        return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+      }
+
+      const now = new Date();
+      const week = getWeekNumber(now);
+      document.getElementById("week-title").innerText = `Viikko ${week}`;
+
+      let tiedot = ohjelma[week];
+      let tbody = document.getElementById("schedule");
+
+      if (tiedot) {
+        tbody.innerHTML = `
+          <tr>
+            <td>${tiedot.paikka}</td>
+            <td>${tiedot.kakso}</td>
+            <td>${tiedot.yksö}</td>
+          </tr>
+        `;
+      } else {
+        tbody.innerHTML = `<tr><td colspan="3">Ei ohjelmaa tälle viikolle</td></tr>`;
+      }
+
+      let allTbody = document.getElementById("allSchedule");
+      for (let v in ohjelma) {
+        allTbody.innerHTML += `
+          <tr>
+            <td>${v}</td>
+            <td>${ohjelma[v].paikka}</td>
+            <td>${ohjelma[v].kakso}</td>
+            <td>${ohjelma[v].yksö}</td>
+          </tr>
+        `;
+      }
     }
 
-    const now = new Date();
-    const week = getWeekNumber(now);
-    document.getElementById("week-title").innerText = `Viikko ${week}`;
-
-    let tiedot = ohjelma[week];
-    let tbody = document.getElementById("schedule");
-
-    if (tiedot) {
-      tbody.innerHTML = `
-        <tr>
-          <td>${tiedot.paikka}</td>
-          <td>${tiedot.kakso}</td>
-          <td>${tiedot.yksö}</td>
-        </tr>
-      `;
-    } else {
-      tbody.innerHTML = `<tr><td colspan="3">Ei ohjelmaa tälle viikolle</td></tr>`;
-    }
-
-    let allTbody = document.getElementById("allSchedule");
-    for (let v in ohjelma) {
-      allTbody.innerHTML += `
-        <tr>
-          <td>${v}</td>
-          <td>${ohjelma[v].paikka}</td>
-          <td>${ohjelma[v].kakso}</td>
-          <td>${ohjelma[v].yksö}</td>
-        </tr>
-      `;
-    }
-  }
-
-  loadData();
-
-  function toggleList() {
-    let div = document.getElementById("allWeeks");
-    div.style.display = (div.style.display === "none") ? "block" : "none";
-  }
-</script>
-
-
-    function getWeekNumber(d) {
-      d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
-      let dayNum = d.getUTCDay() || 7;
-      d.setUTCDate(d.getUTCDate() + 4 - dayNum);
-      let yearStart = new Date(Date.UTC(d.getUTCFullYear(),0,1));
-      return Math.ceil((((d - yearStart) / 86400000) + 1)/7);
-    }
-
-    const now = new Date();
-    const week = getWeekNumber(now);
-    document.getElementById("week-title").innerText = `Viikko ${week}`;
-
-    let tiedot = ohjelma[week];
-    let tbody = document.getElementById("schedule");
-
-    if (tiedot) {
-      tbody.innerHTML = `
-        <tr>
-          <td>${tiedot.paikka}</td>
-          <td>${tiedot.kakso}</td>
-          <td>${tiedot.yksö}</td>
-        </tr>
-      `;
-    } else {
-      tbody.innerHTML = `<tr><td colspan="3">Ei ohjelmaa tälle viikolle</td></tr>`;
-    }
-
-    let allTbody = document.getElementById("allSchedule");
-    for (let v in ohjelma) {
-      allTbody.innerHTML += `
-        <tr>
-          <td>${v}</td>
-          <td>${ohjelma[v].paikka}</td>
-          <td>${ohjelma[v].kakso}</td>
-          <td>${ohjelma[v].yksö}</td>
-        </tr>
-      `;
-    }
+    loadData();
 
     function toggleList() {
       let div = document.getElementById("allWeeks");
-      if (div.style.display === "none") {
-        div.style.display = "block";
-      } else {
-        div.style.display = "none";
-      }
+      div.style.display = (div.style.display === "none") ? "block" : "none";
     }
   </script>
+
 </body>
 </html>
