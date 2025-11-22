@@ -85,29 +85,57 @@
     </div>
   </div>
 
-  <script>
-    const ohjelma = {
-      33: { paikka:"Koulun lähimaastot", kakso:"Kuulumiset + pihapelit, Tapaaminen pukkar.", yksö:"Pelisäännöt, leikit" },
-      34: { paikka:"Koulun lähimaastot", kakso:"Ulkoliikunta, Tapaaminen pukkar.", yksö:"Ulkoliikunta" },
-      35: { paikka:"Kalevan YU-kenttä", kakso:"Perusliikunta", yksö:"MOVE-testi" },
-      36: { paikka:"Koululla LW Tunnin takia", kakso:"ulkoliikunta", yksö:"Loikkatreeni" },
-      37: { paikka:"Kalevan tekonurmi", kakso:"Jalkapallo", yksö:"Lipuryöstö" },
-      38: { paikka:"Kalevan tekonurmi", kakso:"Jalkapallo & ultimate", yksö:"Lenkki" },
-      39: { paikka:"Ilmoitetaan myöhemmin", kakso:"Suunnistus", yksö:"Suunnistuksen teoria" },
-      40: { paikka:"Ilmoitetaan myöhemmin", kakso:"Suunnistus", yksö:"Kaupunkisuunnistus" },
-      41: { paikka:"Koulun lähimaastot", kakso:"Toiveulkoilikka", yksö:"Toiveulkoilikka" },
-      42: { paikka:"-", kakso:"SYYSloma", yksö:"-" },
-      43: { paikka:"Uimahalli", kakso:"Vesiliikunta", yksö:"Kuntosali" },
-      44: { paikka:"Uimahalli", kakso:"Vesiliikunta", yksö:"Kuntosali" },
-      45: { paikka:"PH", kakso:"Salibandy", yksö:"Salibandy" },
-      46: { paikka:"JS", kakso:"Telinevoimistelu", yksö:"Polttopelit" },
-      47: { paikka:"JS", kakso:"Yhteistanssit", yksö:"Yhteistanssit" },
-      48: { paikka:"PH", kakso:"Yhteistanssit", yksö:"Yhteistanssit" },
-      49: { paikka:"JS/KS", kakso:"Kuntoliikunta", yksö:"Toive sisäliikunta" },
-      50: { paikka:"PH", kakso:"Koripallo", yksö:"Koripallo" },
-      51: { paikka:"Koulun salit", kakso:"Sisäliikunta", yksö:"Sisäliikunta" }
-    };
+<script>
+  async function loadData() {
+    const response = await fetch("ohjelma.json");
+    const ohjelma = await response.json();
 
+    function getWeekNumber(d) {
+      d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+      let dayNum = d.getUTCDay() || 7;
+      d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+      let yearStart = new Date(Date.UTC(d.getUTCFullYear(),0,1));
+      return Math.ceil((((d - yearStart) / 86400000) + 1)/7);
+    }
+
+    const now = new Date();
+    const week = getWeekNumber(now);
+    document.getElementById("week-title").innerText = `Viikko ${week}`;
+
+    let tiedot = ohjelma[week];
+    let tbody = document.getElementById("schedule");
+
+    if (tiedot) {
+      tbody.innerHTML = `
+        <tr>
+          <td>${tiedot.paikka}</td>
+          <td>${tiedot.kakso}</td>
+          <td>${tiedot.yksö}</td>
+        </tr>
+      `;
+    } else {
+      tbody.innerHTML = `<tr><td colspan="3">Ei ohjelmaa tälle viikolle</td></tr>`;
+    }
+
+    let allTbody = document.getElementById("allSchedule");
+    for (let v in ohjelma) {
+      allTbody.innerHTML += `
+        <tr>
+          <td>${v}</td>
+          <td>${ohjelma[v].paikka}</td>
+          <td>${ohjelma[v].kakso}</td>
+          <td>${ohjelma[v].yksö}</td>
+        </tr>
+      `;
+    }
+  }
+
+  loadData();
+
+  function toggleList() {
+    let div = document.getElementById("allWeeks");
+    div.style.display = (div.style.display === "none") ? "block" : "none";
+  }
     function getWeekNumber(d) {
       d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
       let dayNum = d.getUTCDay() || 7;
@@ -158,7 +186,6 @@
   </script>
 </body>
 </html>
-
 
 
 
